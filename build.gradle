@@ -3,11 +3,34 @@ plugins{
 }
 
 repositories{
-    mavenCentral()
+    mavenCentral() // грубо говоря это сайт откуда берутся библиотеки - mavenrepository.com
 }
 
 dependencies{
+    //** testImplementation — конфигурация зависимостей в системе автоматической сборки Gradle,
+    // которая используется для компиляции и запуска тестов.
+    //
+    //Когда применяют testImplementation: когда библиотека нужна как для написания, так и для выполнения тестов.
+    // Такая конфигурация часто используется для таких фреймворков тестирования, как JUnit, TestNG,
+    // и библиотек для имитации, например Mockito.
+    //
+    //Особенность testImplementation: зависимости, которые использует эта конфигурация, не включаются
+    // в конечное приложение, а доступны только в тестовой среде.
+    //
     testImplementation(
-            "com.codeborne:selenid:7.8.1"
+            "org.junit.jupiter:junit-jupiter:5.13.0-M2",  // подключаем полный комплект необходимых библиотек,
+                                                // если junit-jupiter-api - то это только часть, то не будут работать,
+                                                // надо ещё другие библиотеки подключать, а так всё включили и нет забот
+            "org.junit.platform:junit-platform-launcher", // не явная зависимость, если выпадает ошибка
+                    // Основная причина заключается в том, что Gradle использует старую версию junit-platform-launcher,
+                    // если в пути к классу тестовой среды выполнения нет явной зависимости от нее.
+                    //OutputDirectoryProvider not available; probably due to unaligned versions of the junit-platform-engine and junit-platform-launcher jars on the classpath/module path.
+            "com.codeborne:selenide:7.8.1"  // подключаем библиотеку для работы с элементами страницы
     )
+}
+
+// Чтобы работала интеграция Junit 5 и IDE IntelliJ нужно подключить библиотеку useJUnitPlatform()
+// в проекте отображается как кнопочка у каждого теста для его запуска
+test {
+    useJUnitPlatform()
 }
